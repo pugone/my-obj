@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>抢购页面</title>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+        }
+        #wrap {
+            margin: 20px 10px;
+        }
+        h2{
+            font-size: 18px;
+            display: block;
+            color: #a8a8a8;
+            border-bottom: 2px solid #a8a8a8;
+            height: 40px;
+            line-height: 40px;
+
+        }
+        img{
+            display: block;
+            margin: 0 auto;
+            width: 100px;
+            height: 100px;
+        }
+        p,.s1,.s2,.des {
+            display: inline-block;
+        }
+        #sale div,#nosale img {
+            left: 0;
+            top: 0;
+            margin-top: 10px;
+            width: 150px;
+            display: inline-block;
+            height: 200px;
+
+        }
+        #sale div {
+            z-index: 9999;
+            position: relative;
+            background: #fff;
+        }
+        #sale {
+            position: relative;
+        }
+        #nosale {
+            position: absolute;
+        }
+        #nosale li {
+            display: inline-block;
+        }
+
+        input {
+            font-size: 10px;
+            height: 10px;
+            width: 90px;
+            margin-right: 10px;
+        }
+        button {
+            font-size: 10px;
+            border: none;
+            width: 30px;
+            background-color: #a1cc9d;
+            color: #fff;
+        }
+        .des {
+            font-size: 10px;
+            color: #a8a8a8;
+        }
+        .s1 {
+            font-size: 12px;
+            color: red;
+            font-weight: bold;
+        }
+        .s2 {
+            font-size: 14px;
+            color: red;
+        }
+        #title {
+            margin-top: 20px;
+            display: block;
+            background-color: #a8a8a8;
+            color: saddlebrown;
+            height: 40px;
+            line-height: 40px;
+        }
+        #price li{
+            list-style: none;
+            display: inline-block;
+            margin-right: 200px;
+            text-indent: 5px;
+
+        }
+        .title {
+            text-indent: 2em;
+        }
+        #sum {
+            color: darkred;
+        }
+        p{
+            display: block;
+            height: 20px;
+            width: 150px;
+            line-height: 20px;
+            color :#a8a8a8;
+            font-weight: bold;
+            font-size: 12px;
+        }
+        #list li {
+            position: relative;
+            width: 100%;
+            height: 80px;
+            list-style: none;
+            display: block;
+            border: 1px solid #a8a8a8;
+        }
+        #list span,.spanpri{
+            position: absolute;
+            line-height: 80px;
+            font-size: 12px;
+            display: inline-block;
+        }
+        #list img{
+            display: inline-block;
+            width: 60px;
+            height: 60px;
+            position: absolute;
+            right: 30px;
+            top:10px;
+        }
+        .spanpri {
+            left: 270px;
+            color: darkred;
+        }
+    </style>
+    <script src="change.js"></script>
+    <script>
+        window.onload = function () {
+            var sale = document.getElementById('sale');
+            var div = sale.getElementsByTagName('div');
+            var list = document.getElementById('list');
+            var sum = document.getElementById('sum');
+
+
+
+            for(var i=0;i<div.length;i++){
+                fn(div[i]);
+            }
+
+            // 以每一个div 为参数 ，执行相同行为
+            function fn(obj) {
+                var btn = obj.getElementsByTagName('button')[0];
+                var p = obj.getElementsByTagName('p')[0];
+                var text = obj.getElementsByTagName('input')[0];
+                var img = obj.getElementsByTagName('img')[0];
+                var spanPri = obj.getElementsByTagName('span')[2];
+                var emNum = obj.getElementsByTagName("em")[0];
+
+                var iNow = null;
+                var t = null;
+                var iNew = null;
+                var str = '';
+                var saleout = null;
+                var onOff = true;
+                btn.onclick = function () {
+                    if(!onOff) return;   // 如果没有这个开关，会有一点bug，在图片还在抖动时继续点击按钮，下面的列表会生成两个商品。
+                    onOff = false;
+                    iNew = new Date(text.value);
+                    clearInterval(saleout);
+                    saleout = setInterval(function () {
+                        iNow = new Date();
+                        t = Math.floor((iNew - iNow) / 1000);
+                        if(t>=0){
+                            str = Math.floor(t / 86400) + '天' + Math.floor(t % 86400 / 3600) + '时' + Math.floor(t % 86400 % 3600 / 60) + '分' + t % 60 + '秒'
+                            p.innerHTML = str;
+                        } else {
+                            clearInterval(saleout);
+
+                            shake(obj, 'left', function () {
+                                toMove(obj, 'top', 5, 120);
+                                toOpa(obj, 0.1, 0);
+                                list.innerHTML += '<li><span>疯狂599，美的爆款隐藏式面板下拉门微波炉</span><span class ="spanpri">'+ spanPri.innerHTML +'</span><img src="'+ img.src+' " /></li>'
+                                sum.innerHTML = parseFloat(sum.innerHTML)+ parseFloat(emNum.innerHTML);
+                                onOff =true;
+                            });
+                        }
+                    }, 1000);
+                }
+
+            }
+        }
+    </script>
+</head>
+<body>
+<div id="wrap">
+    <h2>限购时间</h2>
+
+    <div id="sale">
+ <ul id="nosale">
+     <li><img src="img/下架.png" /></li>
+     <li><img src="img/下架.png" /></li>
+     <li><img src="img/下架.png" /></li>
+     <li><img src="img/下架.png" /></li>
+ </ul>
+        <div>
+            <input type="text" value="October 26,2017 2017 21:19:05 "/><button>确定</button>
+            <p></p>
+            <img src="img/抢购1.png" />
+            <span class="des">疯狂599，美的爆款隐藏式面板下拉门微波炉</span>
+            <span class="s1">抢购价</span>
+            <span class="s2">￥<em>599</em></span>
+        </div>
+        <div>
+            <input type="text" value=" October 26 2017 21:19:00"><button>确定</button>
+            <p></p>
+            <img src="img/抢购2.png" />
+            <span class="des">疯狂599，美的爆款隐藏式面板下拉门微波炉</span>
+            <span class="s1">抢购价</span>
+            <span class="s2">￥<em>3299</em></span>
+        </div>
+        <div>
+            <input type="text" value=" October 26 2017 2017 21:19:10"><button>确定</button>
+            <p></p>
+            <img src="img/抢购3.png" />
+            <span class="des">疯狂599，美的爆款隐藏式面板下拉门微波炉</span>
+            <span class="s1">抢购价</span>
+            <span class="s2">￥<em>79</em></span>
+        </div>
+        <div>
+            <input type="text" value="October 26 2017 2017 21:19:20 "><button>确定</button>
+            <p></p>
+            <img src="img/抢购4.png" />
+            <span class="des">疯狂599，美的爆款隐藏式面板下拉门微波炉</span>
+            <span class="s1">抢购价</span>
+            <span class="s2">￥<em>168</em></span>
+        </div>
+    </div>
+    <div id="price">
+       <div id="title">
+           <ul>
+            <li class="title">商品名称</li>
+            <li>价钱</li>
+           </ul>
+        </div>
+        <ul id="list">
+
+        </ul>
+        总价： <span id="sum"> 00.00 </span> 元
+     </div>
+</div>
+</body>
+</html>
+
+
+
+change.js
+
+function shake(obj, dir, endFn) {
+    if(obj.onOff) return;
+    obj.onOff = true;
+    var pos = parseInt(getStyle(obj, dir));
+    var num = 0;
+    var arr = [];
+
+
+    for (var i = 10; i > 0; i -= 2) {
+        arr.push(i, -i);
+    }
+    arr.push(0);  //抖动距离添加
+    clearInterval(obj.shake);
+    obj.shake = setInterval(function () {
+        obj.style[dir] = pos + arr[num] + 'px';
+        num++;
+        if (num == arr.length) {
+            clearInterval(obj.shake);
+            endFn && endFn();
+            obj.onOff = false;
+        }
+    }, 50);
+}
+
+function toMove(obj, dir, v, target, endFn) {
+    v = parseInt(getStyle(obj, dir)) < target ? v : -v;
+    clearInterval(obj.timer);
+    obj.timer = setInterval(function () {
+        var speed = parseInt(getStyle(obj, dir)) + v;
+        if (speed > target && v > 0 || speed < target && v < 0) {
+            speed = target;
+        }
+        obj.style[dir] = speed + 'px';
+        if(speed==target){
+            clearInterval(obj.timer);
+            endFn && endFn();
+        }
+    }, 10)
+}
+
+function toOpa(obj, v, target, endFn) {
+    v = parseFloat(getStyle(obj, 'opacity')) < target ? v : -v;
+    clearInterval(obj.opa);
+    obj.opa = setInterval(function () {
+        var speed = parseFloat(getStyle(obj, 'opacity')) + v;
+        if (speed > target && v > 0 || speed < target && v < 0) {
+            speed = target;
+        }
+        obj.style.opacity = speed;
+        obj.style.filter = 'alpha(opacity = ' + speed*100 + ')';
+        if(speed==target){
+            clearInterval(obj.opa);
+            endFn && endFn();
+        }
+    }, 30)
+}
+
+function getStyle(obj, attr) {
+    return obj.currentStyle ? obj.currentStyle[attr] : getComputedStyle(obj)[attr];
+
+}
