@@ -103,6 +103,7 @@
             var arr = left.value.split('');
             span.style.display = 'none';
             loading.style.display = 'block';
+            right.innerHTML = '';
            if(!left.value){
                alert('请输入内容！');
                return;
