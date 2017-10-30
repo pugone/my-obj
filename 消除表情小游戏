@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>消除表情小游戏</title>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        h1,p,input {
+            display: block;
+            margin:30px  auto;
+            text-align: center;
+        }
+        #game {
+            width: 800px;
+            height: 500px;
+            border: 1px solid #cc9b9a;
+            margin: auto;
+            position: relative;
+        }
+        #grade {
+            border: 1px solid #636b52;
+            background-color: khaki;
+            position: absolute;
+            top: 0px;
+            left:-130px;
+            width: 130px;
+            height: 70px;
+            text-align: center;
+            padding: 10px;
+            line-height: 25px;
+        }
+        #img {
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+
+    </style>
+</head>
+<body>
+<h1>消除表情小游戏</h1>
+<p>游戏说明：点击“开始游戏”，下面界面将会随机掉落下QQ表情，点中表情即可消除它们，别让它们掉下去哦！</p>
+<input type="button" id="start" value="开始游戏"/>
+<div id="game">
+    <img src="" id="img" />
+    <div id="grade">
+        得分：<span>0</span>分<br/>
+        失分：<span>0</span>分
+    </div>
+</div>
+
+<script src="change.js"></script>
+<script>
+    window.onload = function () {
+        var btn = document.getElementById('start');
+        var game = document.getElementById('game');
+        var grade = document.getElementsByTagName('span');
+        var img = document.getElementById('img');
+        var numV = 15 ;
+
+        var arrImg = ["img/1.png","img/2.png","img/3.png","img/4.png","img/5.png","img/6.png","img/7.png","img/8.png","img/9.png","img/10.png"]
+        var timer = null;
+        function gameReady() {
+            var numPos = Math.floor(Math.random()*740+30);     //  30 - 770
+            var numImg = Math.floor(Math.random()*arrImg.length);
+            img.style.left = numPos + 'px';
+            img.src = arrImg[numImg];
+            img.style.display = 'block';
+            img.style.top = 0;
+
+        }
+
+        function gameGo() {
+            gameReady();
+            toMove(img,'top',numV,470,function () {
+                img.style.display = 'none';
+                shake(game,'left');
+                grade[1].innerHTML = Number(grade[1].innerHTML) + 1;
+                var lostNum= Number(grade[1].innerHTML);
+                if(lostNum == 10){
+                    alert('游戏结束！你的分数是：'+ grade[0].innerHTML+'分！');
+                    btn.disabled = false;
+                    btn.value = '开始游戏';
+                    numV = 15 ;
+                    grade[1].innerHTML = 0;
+                    grade[0].innerHTML = 0;
+                    return;
+                }
+                gameGo();
+
+            });
+            img.onmousedown = function () {
+                _this=this;
+                this.src = 'img/11.png';
+                shake(img,'left',function () {
+                    numV++;
+                    _this.style.display = 'none';
+                    grade[0].innerHTML = Number(grade[0].innerHTML) + 1;
+                    gameGo();
+                })
+            }
+        }
+
+        btn.onclick = function () {
+            this.value = '游戏中';
+            this.disabled = true;
+            gameGo();
+        }
+    }
+</script>
+</body>
+</html>
