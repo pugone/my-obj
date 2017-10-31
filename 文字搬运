@@ -101,10 +101,13 @@
 
         btn.onclick = function () {
             var arr = left.value.split('');
-            span.style.display = 'none';
+            span.style.display = 'block';
             loading.style.display = 'block';
+            loading.style.opacity = '1';
             right.innerHTML = '';
            if(!left.value){
+               span.style.display = 'none';
+               loading.style.display ='none';
                alert('请输入内容！');
                return;
            }
